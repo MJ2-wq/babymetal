@@ -1,6 +1,7 @@
 ﻿const pages = Array.from(document.querySelectorAll("[data-page]"));
 const navLinks = Array.from(document.querySelectorAll("[data-route]"));
 const menuToggle = document.getElementById("menuToggle");
+const foxButton = document.getElementById("foxButton");
 const closeNav = document.getElementById("closeNav");
 const sideNav = document.getElementById("sideNav");
 const navScrim = document.getElementById("navScrim");
@@ -49,6 +50,15 @@ navLinks.forEach((link) => {
 document.querySelectorAll("[data-go]").forEach((button) => {
     button.addEventListener("click", () => setRoute(button.dataset.go));
 });
+
+if (foxButton) {
+    foxButton.addEventListener("click", () => {
+        foxButton.classList.remove("is-ringing");
+        void foxButton.offsetWidth;
+        foxButton.classList.add("is-ringing");
+        playFoxChime();
+    });
+}
 
 menuToggle.addEventListener("click", () => {
     if (sideNav.classList.contains("open")) {
@@ -178,6 +188,34 @@ function escapeHTML(value) {
     }[char]));
 }
 
+function playFoxChime() {
+    try {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const now = context.currentTime;
+        const notes = [392, 523.25, 659.25, 880];
+
+        notes.forEach((frequency, index) => {
+            const oscillator = context.createOscillator();
+            const gain = context.createGain();
+            const start = now + index * 0.09;
+            const end = start + 0.18;
+
+            oscillator.type = index === notes.length - 1 ? "triangle" : "sine";
+            oscillator.frequency.setValueAtTime(frequency, start);
+            gain.gain.setValueAtTime(0.0001, start);
+            gain.gain.exponentialRampToValueAtTime(0.09, start + 0.018);
+            gain.gain.exponentialRampToValueAtTime(0.0001, end);
+
+            oscillator.connect(gain);
+            gain.connect(context.destination);
+            oscillator.start(start);
+            oscillator.stop(end + 0.02);
+        });
+    } catch (error) {
+        // Audio is optional.
+    }
+}
+
 function playTone(frequency, duration) {
     try {
         const context = new (window.AudioContext || window.webkitAudioContext)();
@@ -197,4 +235,5 @@ function playTone(frequency, duration) {
 }
 
 renderPosts();
+
 

@@ -343,43 +343,70 @@ button {
     position: absolute;
     right: clamp(70px, 17vw, 300px);
     top: 58%;
-    width: 82px;
+    width: 86px;
     aspect-ratio: 1;
-    transform: rotate(45deg);
+    display: grid;
+    place-items: center;
     border: 4px solid #ffe629;
-    background: var(--red);
+    background: linear-gradient(135deg, #ff1b2d, #ba0712);
+    transform: rotate(45deg);
     filter: drop-shadow(0 0 18px rgba(241, 27, 39, 0.62));
+    transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
 }
 
-.fox-emblem::before,
-.fox-emblem::after,
-.fox-emblem span {
-    content: "";
+.fox-emblem:hover,
+.fox-emblem:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 24px rgba(255, 230, 41, 0.18);
+    filter: drop-shadow(0 0 26px rgba(241, 27, 39, 0.88));
+}
+
+.fox-emblem:hover {
+    transform: rotate(45deg) scale(1.06);
+}
+
+.fox-icon {
+    position: relative;
+    z-index: 2;
+    width: 62px;
+    height: 62px;
+    transform: rotate(-45deg);
+}
+
+.fox-head,
+.fox-mask {
+    fill: #fff7dd;
+}
+
+.fox-eye,
+.fox-nose {
+    fill: #ffb21d;
+}
+
+.sound-ring {
     position: absolute;
-    background: #fff7dd;
+    inset: -12px;
+    border: 2px solid rgba(255, 230, 41, 0.52);
+    opacity: 0;
+    transform: scale(0.72);
 }
 
-.fox-emblem::before {
-    inset: 18px 18px 7px 18px;
-    clip-path: polygon(50% 0, 100% 100%, 58% 72%, 50% 100%, 42% 72%, 0 100%);
+.fox-emblem.is-ringing .sound-ring {
+    animation: foxSoundRing 520ms ease-out both;
 }
 
-.fox-emblem::after {
-    width: 10px;
-    height: 10px;
-    left: 24px;
-    top: 35px;
-    border-radius: 50%;
-    box-shadow: 23px 0 0 #fff7dd;
+.fox-emblem.is-ringing {
+    animation: foxButtonPulse 520ms ease-out both;
 }
 
-.fox-emblem span {
-    left: 37px;
-    top: 47px;
-    width: 10px;
-    height: 10px;
-    background: #ffb21d;
-    border-radius: 50%;
+@keyframes foxSoundRing {
+    0% { opacity: 0.9; transform: scale(0.72); }
+    100% { opacity: 0; transform: scale(1.55); }
+}
+
+@keyframes foxButtonPulse {
+    0%, 100% { transform: rotate(45deg) scale(1); }
+    45% { transform: rotate(45deg) scale(1.12); }
 }
 
 .section-heading {
@@ -805,6 +832,7 @@ button {
         grid-template-columns: 1fr;
     }
 }
+
 
 
 
